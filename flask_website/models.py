@@ -28,6 +28,13 @@ class Program(db.Model):
     def __repr__(self):
         return f"Program ('{self.name}'),'{self.description}','{self.created_date}', '{self.created_by}'"
 
+class Project(db.model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20),unique=True, nullable=False)
+    description = db.Column(db.Text,unique=False, nullable=False)
+    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+    created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
+    program = realtionship("Program")
 
 class Geometry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,6 +42,29 @@ class Geometry(db.Model):
     description = db.Column(db.Text,unique=False, nullable=False)
     created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
-
+    
     def __repr__(self):
         return f"Geometry ('{self.name}'),'{self.description}','{self.created_date}'"
+
+class Part(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20),unique=True, nullable=False)
+    description = db.Column(db.Text,unique=False, nullable=False)
+    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+    created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
+    geometry =
+    
+class Case(db.model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20),unique=True, nullable=False)
+    description = db.Column(db.Text,unique=False, nullable=False)
+    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+    created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
+    geometry = relationship("Geometry")
+    
+class RideHeight(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+    FRH = db.Column(db.Float(), nullable=False)
+    RRH = db.Column(db.Float(), nullable=False)
+    YAW = db.Column(db.Float(), nullable=False)
+
