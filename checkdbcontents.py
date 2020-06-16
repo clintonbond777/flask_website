@@ -1,5 +1,6 @@
 from flask_website import db
-from flask_website.models import User, Program, Geometry, Case
+from flask_website.models import User, Program, Geometry, Case, Project
+from datetime import datetime
 
 ### Temporary load in data: drop when connected to flask app
 db.drop_all()
@@ -38,23 +39,27 @@ db.session.add(g1)
 db.session.add(g2)
 db.session.commit() 
 
-c1 =Case(name = 'baseline run', 
-    description = '2022 baseline preliminary run', 
-    created_by = u1.id, 
-    project_id = p1.id,  
-    geometry_id = g2.id
-    )
+#c1 =Case(name = 'baseline run', 
+#    description = '2022 baseline preliminary run', 
+#    created_by = u1.id, 
+#    project_id = p1.id,  
+#    geometry_id = g2.id
+#    )
 
-c2 =Case(name = 'WA-FF-01 Part Swap ', 
-    description = '2022 part swap', 
-    created_by = u1.id, 
-    project_id = p1.id, 
-    geometry_id = g2.id 
-    )
+#c2 =Case(name = 'WA-FF-01 Part Swap ', 
+#    description = '2022 part swap', 
+#    created_by = u1.id, 
+#    project_id = p1.id, 
+#    geometry_id = g2.id 
+#    )
 
-db.session.add(c1)
-db.session.add(c2)
-db.session.commit()
+#db.session.add(c1)
+#db.session.add(c2)
+#db.session.commit()
+ 
+jjj = [u.username for u in User.query.all()]
+
+print(jjj)
 
 for u in User.query.all():
     print(u.username)
@@ -71,3 +76,46 @@ for c in Case.query.all():
 user = User.query.filter_by(id = '2').first()
 print(p1.created_by)
 
+pp1 = Project(name = 'Cooling',
+    description = 'Brake Cooling',
+    created_by = u1.id, 
+    program_id = p1.id,
+    )
+
+pp2 = Project(name = ' ASDFFF',
+    description = 'Random project',
+    created_by = u1.id, 
+    program_id = p1.id,
+    )
+
+db.session.add(pp1)
+db.session.add(pp2)
+db.session.commit()
+
+# class Project(db.Model):
+    # __tablename__ = 'project'
+    # id = db.Column(db.Integer, primary_key=True)
+    # name = db.Column(db.String(20),unique=True, nullable=False)
+    # description = db.Column(db.Text,unique=False, nullable=False)
+    # created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+    # created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False) 
+    # program_id = db.Column(db.Integer,db.ForeignKey('program.id'), nullable = False)
+    # program = db.relationship("Program", back_populates = "project")
+
+
+program_select = "WRC"
+project_select = "Cooling"
+
+program_validate = Program.query.filter_by(name = program_select).first()
+
+print('\n'*3)
+print(program_validate.name)
+print('\n'*3)
+print(program_validate.project)
+for proj in program_validate.project:
+    if project_select == proj.name:
+        print('got em')
+
+
+
+print([(str(u.id),u.name) for u in Program.query.all()])
