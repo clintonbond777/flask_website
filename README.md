@@ -12,6 +12,9 @@ https://www.youtube.com/watch?v=cYWiDiIUxQc
 3. Create baseline input file that can be filled or dropdown
 4. 
 
+default login: clintonbond777@gmail.com
+default password: 1234
+
 
 Build the schema here:
 https://app.dbdesigner.net/dashboard

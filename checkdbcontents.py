@@ -6,6 +6,8 @@ from datetime import datetime
 db.drop_all()
 db.create_all()
 
+
+print('Add in users Jeff and Jeff1')
 u1 = User(username = 'Jeff', email = 'jeff@123.com', password = '123')
 u2 = User(username = 'Jeff1', email = 'jeff1@123.com', password = '1234')
 
@@ -13,7 +15,10 @@ db.session.add(u1)
 db.session.add(u2)
 db.session.commit()
 
+print('This is the u1.id call')
 print(u1.id)
+
+print('Adding some programs to the mix')
 
 p1 =Program(name = 'WRC', 
     description = 'WRC CAR', 
@@ -26,6 +31,8 @@ p2 =Program(name = 'NIGHTHAWK',
 db.session.add(p1)
 db.session.add(p2)
 db.session.commit()
+
+print('Adding some geometry to the mix')
 
 g1 = Geometry(name = 'Baseline-1-04', 
     description = '2022 baseline car', 
@@ -57,25 +64,32 @@ db.session.commit()
 #db.session.add(c2)
 #db.session.commit()
  
+print('Print all users formatted')
 jjj = [u.username for u in User.query.all()]
 
 print(jjj)
 
+
+print('Print all User names')
 for u in User.query.all():
     print(u.username)
-    
+
+print('Print all Program names')    
 for p in Program.query.all():
     print(p.name)
 
+print('Loop and print Geometry names')
 for g in Geometry.query.all():
     print(g.name)
 
+print('Print all case names')
 for c in Case.query.all():
     print(c.name)
 
 user = User.query.filter_by(id = '2').first()
 print(p1.created_by)
 
+print('Add in two projects')
 pp1 = Project(name = 'Cooling',
     description = 'Brake Cooling',
     created_by = u1.id, 
