@@ -9,6 +9,11 @@
             </div>
             <h2 class="article-title">{{ program.name }}</h2>
             <p class="article-content">{{ program.description }}</p>
+            {% for project in projects %}
+              <div class="media-body">
+                <h2><a class="article-title" href="{{ url_for('project', program_id = program.id, project_id = project.id) }}">{{ project.name }}</a></h2>
+              </div>
+            {% endfor %}
           </div>
         </article>
 {% endblock content %}

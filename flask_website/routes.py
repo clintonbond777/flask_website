@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
-from flask_website.models import User, Program
-from flask_website.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateProgramForm
+from flask_website.models import User, Program, Project
+from flask_website.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateProgramForm, CreateProjectForm
 from flask_website import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import secrets
@@ -11,7 +11,7 @@ from PIL import Image
 @app.route("/home")
 def home(): 
     posts = Program.query.all()
-    return render_template('home.html', programs = Program.query.all(),posts = posts)
+    return render_template('home.html', programs = Program.query.all(), posts = posts)
 
 @app.route("/about")
 def about(): 
@@ -88,7 +88,7 @@ def newprogram():
     form = CreateProgramForm()
     if form.validate_on_submit():
         flash('Your Program has been created')
-        program = Program(name=form.name.data, description = form.description.data, created_by = current_user.id)
+        program = Program(name=form.name.data, description = form.description.data, created_by = current_user.id, program_id = form.program_id.data)
         db.session.add(program)
         db.session.commit()
         return redirect(url_for('home'))
@@ -98,7 +98,8 @@ def newprogram():
 @app.route("/programs/<int:program_id>")
 def program(program_id):
     program = Program.query.get_or_404(program_id)
-    return render_template('program.html', title = program.name, program = program)
+    projects =program.project 
+    return render_template('program.html', title = program.name, program = program, projects = projects)
 
 @app.route("/programs/<int:program_id>/update")
 @login_required
@@ -119,3 +120,22 @@ def update_program(program_id):
         form.description.data = program.description
         return redirect (url_for ('program', program_id = program.id))
     return render_template('create_program.html', title = 'Create a Program', form = form, legend = 'Update Program')
+
+
+@app.route("/newproject", methods=['GET', 'POST'])
+def newproject():
+    form = CreateProjectForm()
+    if form.validate_on_submit():
+        flash('Your Project has been created')
+        project = Project(name = form.name.data, description = form.description.data, created_by = current_user.id, program_id = form.program_select.data)
+        db.session.add(project)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('create_project.html', title = 'Create a Project', form = form)
+
+
+@app.route("/programs/<int:program_id>/<int:project_id>")
+def project(program_id,project_id):
+    program = Program.query.get_or_404(program_id)
+    projects =program.project 
+    return render_template('program.html', title = program.name, program = program, projects = projects)

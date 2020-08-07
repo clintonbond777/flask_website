@@ -39,7 +39,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20),unique=True, nullable=False)
     description = db.Column(db.Text,unique=False, nullable=False)
-    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow) #auto
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False) 
     program_id = db.Column(db.Integer,db.ForeignKey('program.id'), nullable = False)
     program = db.relationship("Program", back_populates = "project")
