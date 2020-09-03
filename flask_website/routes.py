@@ -88,7 +88,7 @@ def newprogram():
     form = CreateProgramForm()
     if form.validate_on_submit():
         flash('Your Program has been created')
-        program = Program(name=form.name.data, description = form.description.data, created_by = current_user.id, program_id = form.program_id.data)
+        program = Program(name=form.name.data, description = form.description.data, created_by = current_user.id)
         db.session.add(program)
         db.session.commit()
         return redirect(url_for('home'))
