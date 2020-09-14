@@ -17,8 +17,7 @@ class User(db.Model,UserMixin):
     create_program= db.relationship('Program', backref='creator', lazy=True)
 
     def __repr__(self):
-        return
-        f"User|'{self.id}','{self.username}','{self.email}','{self.image_file}','{self.password}','{self.create_program}'"
+        return f"User|'{self.id}','{self.username}','{self.email}','{self.image_file}','{self.password}','{self.create_program}'"
 
 class Program(db.Model):
     __tablename__ = 'program'  

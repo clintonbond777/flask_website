@@ -10,8 +10,7 @@ from PIL import Image
 @app.route("/")
 @app.route("/home")
 def home(): 
-    posts = Program.query.all()
-    return render_template('home.html', programs = Program.query.all(), posts = posts)
+    return render_template('home.html', programs = Program.query.all())
 
 @app.route("/about")
 def about(): 
@@ -134,8 +133,17 @@ def newproject():
     return render_template('create_project.html', title = 'Create a Project', form = form)
 
 
-@app.route("/programs/<int:program_id>/<int:project_id>")
+@app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
 def project(program_id,project_id):
     program = Program.query.get_or_404(program_id)
-    projects =program.project 
-    return render_template('program.html', title = program.name, program = program, projects = projects)
+    projects =program.project
+    
+    return render_template('project.html', title = program.name, program = program, projects = projects)
+
+
+@app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
+def case(program_id,project_id, case_id):
+    program = Program.query.get_or_404(program_id)
+    projects =program.project
+    case = Case.query.get_or_404(case_id)
+    return render_template('case.html', title = program.name, program = program, projects = projects, case = case)

@@ -5,6 +5,9 @@ flask website with sql backend
 Corey Shafer's excellent tutorial
 https://www.youtube.com/watch?v=cYWiDiIUxQc
 
+username: clintonbond778@gmail.com
+password: password
+
 # Steps to take
 1. Create database schema
     1.a.determine how to implement one-to-many relationship
