@@ -41,10 +41,30 @@ class Project(db.Model):
     created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow) #auto
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False) 
     program_id = db.Column(db.Integer,db.ForeignKey('program.id'), nullable = False)
+    
     program = db.relationship("Program", back_populates = "project")
     
+    case = db.relationship("Case", back_populates = "project") # forward
+
     def __repr__(self):
         return f"Program|'{self.name}'),'{self.description}','{self.created_date}','{self.created_by}', '{self.program_id}','{self.program}'"
+
+class Case(db.Model):
+    __tablename__ = 'case'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20),unique=True, nullable=False)
+    description = db.Column(db.Text,unique=False, nullable=False)
+    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+    created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
+    project_id= db.Column(db.Integer, db.ForeignKey('project.id'), nullable = False)
+    geometry_id = db.Column(db.Integer, db.ForeignKey('geometry.id'), nullable = False)
+    
+    project = db.relationship("Project", back_populates = "case")
+
+
+    def __repr__(self):
+        return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{self.geometry_id}'"
+
 class Geometry(db.Model):
     __tablename__ = 'geometry'
     id = db.Column(db.Integer, primary_key=True)
@@ -64,18 +84,7 @@ class Part(db.Model):
     created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
     
-class Case(db.Model):
-    __tablename__ = 'case'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20),unique=True, nullable=False)
-    description = db.Column(db.Text,unique=False, nullable=False)
-    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
-    created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
-    project_id= db.Column(db.Integer, db.ForeignKey('project.id'), nullable = False)
-    geometry_id = db.Column(db.Integer, db.ForeignKey('geometry.id'), nullable = False)
 
-    def __repr__(self):
-        return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{self.geometry_id}'"
 
 class RideHeight(db.Model):
     __tablename__ = 'rideheight'  
@@ -83,4 +92,4 @@ class RideHeight(db.Model):
     frh= db.Column(db.Float(), nullable=False)
     rrh= db.Column(db.Float(), nullable=False)
     yaw= db.Column(db.Float(), nullable=False)
-
+    roll = db.Column(db.Float(), nullable=False)

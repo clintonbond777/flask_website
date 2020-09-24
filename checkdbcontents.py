@@ -46,23 +46,23 @@ db.session.add(g1)
 db.session.add(g2)
 db.session.commit() 
 
-#c1 =Case(name = 'baseline run', 
-#    description = '2022 baseline preliminary run', 
-#    created_by = u1.id, 
-#    project_id = p1.id,  
-#    geometry_id = g2.id
-#    )
+c1 =Case(name = 'baseline run', 
+    description = '2022 baseline preliminary run', 
+    created_by = u1.id, 
+    project_id = p1.id,  
+    geometry_id = g2.id
+    )
 
-#c2 =Case(name = 'WA-FF-01 Part Swap ', 
-#    description = '2022 part swap', 
-#    created_by = u1.id, 
-#    project_id = p1.id, 
-#    geometry_id = g2.id 
-#    )
+c2 =Case(name = 'WA-FF-01 Part Swap ', 
+    description = '2022 part swap', 
+    created_by = u1.id, 
+    project_id = p1.id, 
+    geometry_id = g2.id 
+    )
 
-#db.session.add(c1)
-#db.session.add(c2)
-#db.session.commit()
+db.session.add(c1)
+db.session.add(c2)
+db.session.commit()
  
 print('Print all users formatted')
 jjj = [u.username for u in User.query.all()]
@@ -106,16 +106,6 @@ db.session.add(pp1)
 db.session.add(pp2)
 db.session.commit()
 
-# class Project(db.Model):
-    # __tablename__ = 'project'
-    # id = db.Column(db.Integer, primary_key=True)
-    # name = db.Column(db.String(20),unique=True, nullable=False)
-    # description = db.Column(db.Text,unique=False, nullable=False)
-    # created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
-    # created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False) 
-    # program_id = db.Column(db.Integer,db.ForeignKey('program.id'), nullable = False)
-    # program = db.relationship("Program", back_populates = "project")
-
 
 program_select = "WRC"
 project_select = "Cooling"
@@ -129,6 +119,9 @@ print(program_validate.project)
 for proj in program_validate.project:
     if project_select == proj.name:
         print('got em')
+
+
+##
 
 
 

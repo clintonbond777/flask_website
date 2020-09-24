@@ -1,18 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
         <article class="media content-section">
-          <img class = "rounded-circle article-img", src="{{ url_for('static',filename = 'profile_pics/' + program.creator.image_file) }}">
+          <img class = "rounded-circle article-img", src="{{ url_for('static', filename = 'profile_pics/' + program.creator.image_file) }}">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ project.creator.username }}</a>
-              <small class="text-muted"> Created {{ project.created_date.strftime('%Y-%m-%d') }}</small>
+              <a class="mr-2" href="#">{{ program.created_by }}</a>
+              <small class="text-muted"> Created {{ program.created_date.strftime('%Y-%m-%d') }}</small>
             </div>
-            <h2 class="article-title">{{ project.name }}</h2>
-            <p class="article-content">{{ project.description }}</p>
+            <h2 class="article-title">{{ program.name }}</h2>
+            <p class="article-content">{{ program.description }}</p>
             {% for project in projects %}
               <div class="media-body">
-                <h2><a class="article-title" href="{{ url_for('project',program_id = program.id, project_id = project.id}}">{{ project.name }}</a></h2>
-                <div class="article-text">{{ case.description }} </div>
+                <h2><a class="article-title" href="{{ url_for('project',program_id = program.id, project_id = project.id) }}">{{ project.name }}</a></h2>
               </div>
             {% endfor %}
           </div>

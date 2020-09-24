@@ -133,17 +133,17 @@ def newproject():
     return render_template('create_project.html', title = 'Create a Project', form = form)
 
 
-@app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
+@app.route("/programs/<int:program_id>/<int:project_id>/")
 def project(program_id,project_id):
     program = Program.query.get_or_404(program_id)
-    projects =program.project
-    
-    return render_template('project.html', title = program.name, program = program, projects = projects)
+    project =Project.query.get_or_404(project_id)
+    cases = project.case    
+    return render_template('project.html', title = program.name, program = program, project = project, cases = cases)
 
 
 @app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
 def case(program_id,project_id, case_id):
     program = Program.query.get_or_404(program_id)
-    projects =program.project
+    projects =Project.query.get_or_404(project_id)
     case = Case.query.get_or_404(case_id)
     return render_template('case.html', title = program.name, program = program, projects = projects, case = case)
