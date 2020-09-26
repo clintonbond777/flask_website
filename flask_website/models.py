@@ -65,8 +65,8 @@ class Case(db.Model):
     def __repr__(self):
         return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{self.geometry_id}'"
 
-class Geometry(db.Model):
-    __tablename__ = 'geometry'
+class Model(db.Model):
+    __tablename__ = 'model'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20),unique=True, nullable=False)
     description = db.Column(db.Text,unique=False, nullable=False)
@@ -84,6 +84,10 @@ class Part(db.Model):
     created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
     
+Model_Part = db.Table('Model_Part', db.Model.metadata,
+    db.Column('model_id', db.Integer, db.ForeignKey('model.id'), primary_key=True),
+    db.Column('part_id', db.Integer, db.ForeignKey('part.id'), primary_key=True)
+)   
 
 
 class RideHeight(db.Model):
@@ -93,3 +97,20 @@ class RideHeight(db.Model):
     rrh= db.Column(db.Float(), nullable=False)
     yaw= db.Column(db.Float(), nullable=False)
     roll = db.Column(db.Float(), nullable=False)
+
+    ridemap = db.relationship('RideMap', secondary= 'RideMap_Rideheight', lazy = 'subquery', backref = db.backref('rideheight', lazy=True))
+
+class RideMap(db.Model):
+    __tablename__ = 'ridemap'  
+    id = db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.Float(), nullable=False)
+    description= db.Column(db.Float(), nullable=False)
+    created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+
+    #rideheight1 = db.relationship('RideHeight', secondary= 'RideMap_Rideheight', lazy = 'subquery', backref = db.backref('ridemap', lazy=True))
+
+
+RideMap_Rideheight = db.Table('RideMap_Rideheight', db.Model.metadata,
+    db.Column('rideheight_id', db.Integer, db.ForeignKey('rideheight.id'),primary_key=True),
+    db.Column('ridemap_id', db.Integer, db.ForeignKey('ridemap.id'), primary_key=True)
+)

@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
-from flask_website.models import User, Program, Project
+from flask_website.models import User, Program, Project, Case
 from flask_website.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateProgramForm, CreateProjectForm
 from flask_website import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
@@ -83,6 +83,7 @@ def account():
     return render_template('account.html', title = 'Account', image_file = image_file, form = form)
 
 @app.route("/newprogram", methods = ['GET', 'POST'])
+@login_required
 def newprogram():
     form = CreateProgramForm()
     if form.validate_on_submit():
@@ -95,6 +96,7 @@ def newprogram():
 
 
 @app.route("/programs/<int:program_id>")
+@login_required
 def program(program_id):
     program = Program.query.get_or_404(program_id)
     projects =program.project 
@@ -122,6 +124,7 @@ def update_program(program_id):
 
 
 @app.route("/newproject", methods=['GET', 'POST'])
+@login_required
 def newproject():
     form = CreateProjectForm()
     if form.validate_on_submit():
@@ -132,7 +135,7 @@ def newproject():
         return redirect(url_for('home'))
     return render_template('create_project.html', title = 'Create a Project', form = form)
 
-
+@login_required
 @app.route("/programs/<int:program_id>/<int:project_id>/")
 def project(program_id,project_id):
     program = Program.query.get_or_404(program_id)
@@ -140,7 +143,7 @@ def project(program_id,project_id):
     cases = project.case    
     return render_template('project.html', title = program.name, program = program, project = project, cases = cases)
 
-
+@login_required
 @app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
 def case(program_id,project_id, case_id):
     program = Program.query.get_or_404(program_id)
