@@ -57,13 +57,13 @@ class Case(db.Model):
     created_date = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
     project_id= db.Column(db.Integer, db.ForeignKey('project.id'), nullable = False)
-    geometry_id = db.Column(db.Integer, db.ForeignKey('geometry.id'), nullable = False)
+    model_id = db.Column(db.Integer, db.ForeignKey('model.id'), nullable = False)
     
     project = db.relationship("Project", back_populates = "case")
 
 
     def __repr__(self):
-        return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{self.geometry_id}'"
+        return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{model_id}'"
 
 class Model(db.Model):
     __tablename__ = 'model'
@@ -74,7 +74,7 @@ class Model(db.Model):
     created_by = db.Column(db.Integer,db.ForeignKey('user.id'), nullable = False)
     
     def __repr__(self):
-        return f"Geometry|'{self.name}'),'{self.description}','{self.created_date}'"
+        return f"Model|'{self.name}'),'{self.description}','{self.created_date}'"
 
 class Part(db.Model):
     __tablename__ = 'part'

@@ -1,5 +1,5 @@
 from flask_website import db
-from flask_website.models import User, Program, Geometry, Case, Project
+from flask_website.models import User, Program, Model, Case, Project
 from datetime import datetime
 
 ### Temporary load in data: drop when connected to flask app
@@ -34,30 +34,30 @@ db.session.commit()
 
 print('Adding some geometry to the mix')
 
-g1 = Geometry(name = 'Baseline-1-04', 
+m1 = Model(name = 'Baseline-1-04', 
     description = '2022 baseline car', 
     created_by = u2.id)
 
-g2 = Geometry(name = 'Baseline-1-04-WA-FF-01', 
+m2 = Model(name = 'Baseline-1-04-WA-FF-01', 
     description = 'Front Splitter Extension (-x)', 
     created_by = u1.id)
 
-db.session.add(g1)
-db.session.add(g2)
+db.session.add(m1)
+db.session.add(m2)
 db.session.commit() 
 
 c1 =Case(name = 'baseline run', 
     description = '2022 baseline preliminary run', 
     created_by = u1.id, 
     project_id = p1.id,  
-    geometry_id = g2.id
+    model_id = m2.id
     )
 
 c2 =Case(name = 'WA-FF-01 Part Swap ', 
     description = '2022 part swap', 
     created_by = u1.id, 
     project_id = p1.id, 
-    geometry_id = g2.id 
+    model_id = m2.id 
     )
 
 db.session.add(c1)
@@ -79,7 +79,7 @@ for p in Program.query.all():
     print(p.name)
 
 print('Loop and print Geometry names')
-for g in Geometry.query.all():
+for g in Model.query.all():
     print(g.name)
 
 print('Print all case names')
