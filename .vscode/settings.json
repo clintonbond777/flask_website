@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/clinton/flask_website/venv/bin/python3",
+    "python.pythonPath": "~/.virtual_envs/flask-project",
 
     "python.linting.pylintArgs": [
         "--load-plugins",
