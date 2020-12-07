@@ -1,11 +1,16 @@
-from flask import render_template, url_for, flash, redirect, request
-from flask_website.models import User, Program, Project, Case
-from flask_website.forms import RegistrationForm, LoginForm, UpdateAccountForm, CreateProgramForm, CreateProjectForm
-from flask_website import app, db, bcrypt
-from flask_login import login_user, current_user, logout_user, login_required
-import secrets
 import os
+import secrets
+
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
 from PIL import Image
+
+from flask_website import app, bcrypt, db
+from flask_website.forms import (CreateProgramForm, CreateProjectForm,
+                                 LoginForm, RegistrationForm,
+                                 UpdateAccountForm)
+from flask_website.models import Case, Program, Project, User
+
 
 @app.route("/")
 @app.route("/home")
@@ -97,9 +102,9 @@ def newprogram():
 
 @app.route("/programs/<int:program_id>")
 @login_required
-def program(program_id):
+def programs(program_id):
     program = Program.query.get_or_404(program_id)
-    projects =program.project 
+    projects =program.project
     return render_template('program.html', title = program.name, program = program, projects = projects)
 
 @app.route("/programs/<int:program_id>/update")
@@ -142,6 +147,19 @@ def project(program_id,project_id):
     project =Project.query.get_or_404(project_id)
     cases = project.case    
     return render_template('project.html', title = program.name, program = program, project = project, cases = cases)
+
+@app.route("/newcase", methods=['GET', 'POST'])
+@login_required
+def newcase():
+    form = CreateCaseForm()
+    if form.validate_on_submit():
+        flash('Your Case has been created')
+        project = Project(name = form.name.data, description = form.description.data, created_by = current_user.id, program_id = form.program_select.data)
+        db.session.add(project)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('create_project.html', title = 'Create a Project', form = form)
+
 
 @login_required
 @app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")

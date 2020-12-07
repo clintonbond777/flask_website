@@ -8,6 +8,9 @@ https://www.youtube.com/watch?v=cYWiDiIUxQc
 username: clintonbond778@gmail.com
 password: password
 
+username: clintonbond777@gmail.com
+password: 1234
+
 # Steps to take
 1. Create database schema
     1.a.determine how to implement one-to-many relationship

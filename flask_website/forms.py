@@ -88,10 +88,24 @@ class CreateProjectForm(FlaskForm):
     #submit all that information to server with nice button 
     submit = SubmitField('Create Project')
 
-    #def validate_project_name(self, project, program):
-    #    #filter program then project
-    #    program_validate = Program.query.filter_by(name = program_select.data).first()
-    #    # check projects associated with this program
-    #    for row in program_validate.project:
-    #        if row.name == name.data:
-    #            raise ValidationError('Project taken already. Please use a unique project or append cases to it')
+class CreateCaseForm(FlaskForm):
+    # figure out which project the user came from and assume that is where they want to create a case
+
+    # else figure out what project it needs to be placed in a double level list.
+
+    def get_current_program():
+        return [(str(u.id),u.name) for u in Program.query.all()]
+    # select program to be associated with
+    program_select = SelectField(choices = get_current_programs())
+    # create name of project
+    name =  StringField('Project',
+                           validators=[DataRequired(), 
+                           Length(min=2, max=20)])
+    # put a description of the project
+
+    description = StringField('Description',
+                           validators=[DataRequired()])
+
+
+    #submit all that information to server with nice button 
+    submit = SubmitField('Create Project')
