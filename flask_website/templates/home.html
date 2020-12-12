@@ -1,16 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for program in programs %}
-        <article class="media content-section">
-          <img class = "rounded-circle article-img", src="{{ url_for('static',filename = 'profile_pics/' + program.creator.image_file) }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ program.creator.username }}</a>
-              <small class="text-muted"> Posted {{ program.created_date.strftime('%Y-%m-%d') }}</small>
-            </div>
-            <h2><a class="article-title" href="{{ url_for('program', program_id = program.id) }}">{{ program.name }}</a></h2>
-            <p class="article-content">{{ program.description }}</p>
-          </div>
-        </article>
-    {% endfor %}
+{% for program in programs %}
+<article class="media content-section">
+  <img class="rounded-circle article-img" ,
+    src="{{ url_for('static',filename = 'profile_pics/' + program.creator.image_file) }}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ program.creator.username }}</a>
+      <small class="text-muted"> Posted {{ program.created_date.strftime('%Y-%m-%d') }}</small>
+    </div>
+    <h2><a class="article-title" href="{{ url_for('programs', program_id = program.id) }}">{{ program.name }}</a></h2>
+    <p class="article-content">{{ program.description }}</p>
+  </div>
+</article>
+{% endfor %}
 {% endblock content %}
