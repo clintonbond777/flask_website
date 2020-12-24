@@ -1,7 +1,8 @@
 import os
+import re
 import secrets
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, jsonify, abort
 from flask_login import current_user, login_required, login_user, logout_user
 from PIL import Image
 
@@ -9,7 +10,8 @@ from flask_website import app, bcrypt, db
 from flask_website.forms import (
     CreateProgramForm,
     CreateProjectForm,
-    CreateCaseForm,
+    # CreateCaseForm,
+    CreateCaseForm2,
     LoginForm,
     RegistrationForm,
     UpdateAccountForm,
@@ -195,22 +197,22 @@ def project(program_id, project_id):
     )
 
 
-@app.route("/newcase", methods=["GET", "POST"])
-@login_required
-def newcase():
-    program = Program.query.all()
-    form = CreateCaseForm()
-    form.program_select.choices = [(g.id, g.name) for g in Program.query.all()]
-    form.project_select.choices = [(g.id, g.name) for g in Project.query.all()]
-    if request.method == "GET":
-        return render_template("create_case.html", form=form)
-    if form.validate_on_submit() and request.form["form_name"] == "PickProject":
-        # code to process form
-        flash(
-            "Program: %s, Project: %s"
-            % (form.program_select.data, form.project_select.data)
-        )
-    return redirect(url_for("newcase"))
+# @app.route("/newcase", methods=["GET", "POST"])
+# @login_required
+# def newcase():
+#     program = Program.query.all()
+#     form = CreateCaseForm()
+#     form.program_select.choices = [(g.id, g.name) for g in Program.query.all()]
+#     form.project_select.choices = [(g.id, g.name) for g in Project.query.all()]
+#     if request.method == "GET":
+#         return render_template("create_case.html", form=form)
+#     if form.validate_on_submit() and request.form["form_name"] == "PickProject":
+#         # code to process form
+#         flash(
+#             "Program: %s, Project: %s"
+#             % (form.program_select.data, form.project_select.data)
+#         )
+#     return redirect(url_for("newcase"))
 
 
 @app.route("/_get_projects/u")
@@ -231,3 +233,34 @@ def case(program_id, project_id, case_id):
     return render_template(
         "case.html", title=program.name, program=program, projects=projects, case=case
     )
+
+
+@app.route("/newcase2", methods=["GET", "POST"])
+@login_required
+def newcase2():
+    program = Program.query.all()
+    form = CreateCaseForm2()
+    form.program_select.choices = [(g.id, g.name) for g in Program.query.all()]
+    form.project_select.choices = [(g.id, g.name) for g in Project.query.all()]
+    if request.method == "GET":
+        return render_template("create_case2.html", form=form)
+
+    if form.validate_on_submit() and request.form["form_name"] == "PickProject":
+        # code to process form
+        flash(
+            "Program: %s, Project: %s"
+            % (form.program_select.data, form.project_select.data)
+        )
+    return redirect(url_for("newcase2"))
+
+@app.route('/get_project')
+def get_project():
+    # good for debug, make sure args were sent
+    print(request.args)
+    program = request.args.get('program_select', 'default_if_none')
+    output = {}
+    # I have no idea what this returns...just doing a list generator here assuming we get a list of values
+    output['project'] = [('a', 'this is one'), ('b','this is two'),('c','this is :)')]
+    
+    #[x for x in Project.query.filter_by(program = program_select)]
+    return jsonify(output)

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="content-section">
-    <form method="POST" action="/newcase">
+    <form method="POST" action="/newcase2">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.program_select.label(class="form-control-label") }} {{ form.program_select }}
@@ -41,4 +41,13 @@
         </div>
     </form>
 </div>
+
+<script>
+    ('select#program_select').on('change', function (e) {
+            console.log(this.value,
+                this.options[this.selectedIndex].value,
+                $(this).find("option:selected").val());
+        });
+</script>
+
 {% endblock content %}

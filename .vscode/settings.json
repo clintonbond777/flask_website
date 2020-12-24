@@ -1,9 +1,12 @@
 {
-    "python.pythonPath": "venv/bin/python",
+    "python.pythonPath": "/home/clinton/Documents/flask_venv/bin/python3",
 
     "python.linting.pylintArgs": [
         "--load-plugins",
         "pylint-flask"
     ],
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "files.autoSave": "afterDelay"
 }
