@@ -142,8 +142,8 @@ class CreateCaseForm2(FlaskForm):
     # create name of project
 
     # put a description of the project
-    # name = StringField("Case Name", validators=[DataRequired(), Length(min=2, max=20)])
-    # description = StringField("Description", validators=[DataRequired()])
+    name = StringField("Case Name", validators=[DataRequired(), Length(min=2, max=20)])
+    description = StringField("Description", validators=[DataRequired()])
 
     # submit all that information to server with nice button
-    submit = SubmitField("Create Project")
+    submit = SubmitField("Create Case")

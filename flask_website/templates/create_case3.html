@@ -7,31 +7,41 @@
     $(document).ready(function() {
         console.log("This is changed now")
         
+        // call to update on load
+        
+        
         var dropdown = {
             select_program: $('#program_select'),
             select_project: $('#project_select')
         };
-
-        // call to update on load
         updateProject();
+        //console.log(dropdown)
+
+        
         
         function updateProject() {
             console.log("inside the updateProject() function")
             var send = {
                 program_select_var: dropdown.select_program.val()
                 };
+
+            //console.log(send)
                 dropdown.select_project.attr('disabled', 'disabled');
                 dropdown.select_project.empty();
             $.getJSON("{{ url_for('_get_project') }}", send, function(data) {
-                $.each(data, function(item)
-                    {dropdown.select_project.append(
-                        $('<option>', {
-                            value: item[0],
-                            text: item[1]
+                
+                $.each(data["project"], function(index, element){
+                    console.log(element)
+                                            
+                    dropdown.select_project.append(
+                        
+                    $('<option>', {
+                        value: element[0],
+                        text: element[1]
                         })
                     );
-                });        
-            dropdown.select_project.removeAttr('disabled');
+                });    
+                dropdown.select_project.removeAttr('disabled');
             });
         }
         dropdown.select_program.on('change', function() {
@@ -47,6 +57,8 @@
         <div class="form-group" id='input1'>
             {{ form.program_select.label(class="form-control-label") }} {{ form.program_select }}
             {{ form.project_select.label(class="form-control-label") }} {{ form.project_select }}
+            {{ form.name.label(class="form-control-label") }} {{ form.name }}
+            {{ form.description.label(class="form-control-label") }} {{ form.description }}
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>

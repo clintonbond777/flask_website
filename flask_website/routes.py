@@ -258,13 +258,21 @@ def newcase2():
 def _get_project():
     # good for debug, make sure args were sent
     print(request.args)
-    program = request.args.get("program_select", "01", "default_if_none")
-    output = {}
-    output["project"] = [
-        ("1", "this is one"),
-        ("2", "this is two"),
-        ("3", "this is :)"),
-    ]
+    program_ID = request.args.get("program_select_var", "default_if_none")
+    print(program_ID)
 
-    # [(x.ID, x.name) for x in Project.query.filter_by(program = program_select)]
+    output = {}
+    # output["project"] = [
+    #     ("1", "this is one"),
+    #     ("2", "this is two"),
+    #     ("3", "this is :)"),
+    # ]
+
+    output["project"] = [
+        (x.id, x.name) for x in Project.query.filter_by(program_id=program_ID)
+    ]
+    print(output, "\n")
+    #
+
+    print(jsonify(output))
     return jsonify(output)
