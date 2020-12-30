@@ -258,7 +258,7 @@ def newcase2():
 def _get_project():
     # good for debug, make sure args were sent
     print(request.args)
-    program = request.args.get("program_select",'01', "default_if_none", type=str)
+    program = request.args.get("program_select", "01", "default_if_none")
     output = {}
     output["project"] = [
         ("1", "this is one"),

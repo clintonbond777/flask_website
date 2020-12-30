@@ -23,7 +23,7 @@
                 dropdown.select_project.attr('disabled', 'disabled');
                 dropdown.select_project.empty();
             $.getJSON("{{ url_for('_get_project') }}", send, function(data) {
-                data.forEach(function(item) 
+                $.each(data, function(item)
                     {dropdown.select_project.append(
                         $('<option>', {
                             value: item[0],
