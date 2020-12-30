@@ -215,13 +215,13 @@ def project(program_id, project_id):
 #     return redirect(url_for("newcase"))
 
 
-@app.route("/_get_projects/u")
-def _get_projects():
-    program = request.args.get("program_selected", "01", type=str)
-    projects = [
-        (row.ID, row.Name) for row in Project.query.filter_by(program=program).all()
-    ]
-    return jsonify(projects)
+# @app.route("/_get_projects/u")
+# def _get_projects():
+#     program = request.args.get("program_selected", "01", type=str)
+#     projects = [
+#         (row.ID, row.Name) for row in Project.query.filter_by(program=program).all()
+#     ]
+#     return jsonify(projects)
 
 
 @login_required
@@ -243,9 +243,9 @@ def newcase2():
     form.program_select.choices = [(g.id, g.name) for g in Program.query.all()]
     form.project_select.choices = [(g.id, g.name) for g in Project.query.all()]
     if request.method == "GET":
-        return render_template("create_case2.html", form=form)
+        return render_template("create_case3.html", form=form)
 
-    if form.validate_on_submit() and request.form["form_name"] == "PickProject":
+    if form.validate_on_submit():  # and request.form["form_name"] == "PickProject":
         # code to process form
         flash(
             "Program: %s, Project: %s"
@@ -253,14 +253,18 @@ def newcase2():
         )
     return redirect(url_for("newcase2"))
 
-@app.route('/get_project')
-def get_project():
+
+@app.route("/_get_project/")
+def _get_project():
     # good for debug, make sure args were sent
     print(request.args)
-    program = request.args.get('program_select', 'default_if_none')
+    program = request.args.get("program_select",'01', "default_if_none", type=str)
     output = {}
-    # I have no idea what this returns...just doing a list generator here assuming we get a list of values
-    output['project'] = [('a', 'this is one'), ('b','this is two'),('c','this is :)')]
-    
-    #[x for x in Project.query.filter_by(program = program_select)]
+    output["project"] = [
+        ("1", "this is one"),
+        ("2", "this is two"),
+        ("3", "this is :)"),
+    ]
+
+    # [(x.ID, x.name) for x in Project.query.filter_by(program = program_select)]
     return jsonify(output)

@@ -1,58 +1,30 @@
 {% extends "layout.html" %}
-<script charset="utf-8" type="text/javascript">
-    // this is called a javascript closure. it also wont run the code until the page is finished loading
-    // and it protects the scope of your variables from other code you may later add to the page
-    $(function () {
-        console.log('Function working'); // good for QA!
-        var program_select = $('#program_select');
-        var project_select = $('#project_select');
-        program_select.on('change', function () {
-            // fires when room selection changes
-            getUpdatedSettings();
-        });
-
-        function getUpdatedSettings() {
-            // data to send back to the server
-            var send = {
-                program: program_select.val(),
-            };
-
-            // make the selections disabled while fetching new data
-            project_select.attr('disabled', true);
-
-            $.getJSON("/get_project", send, function (response) {
-                console.log(response); // good for QA!
-
-                // populate 1am
-                project_select.empty();
-                $.each(response.project, function (index, value) {
-                    project_select.append(
-                        $('<option>', {
-                            value: value,
-                            text: value
-                        }, '</option>'))
-                });
-                // remove disabled now
-                project_select.removeAttr('disabled');
-            });
-        }
-    });
-</script>
-
 {% block content %}
-<div class="content-section">
+<div class="content-section" id=conents_section>
     <form method="POST" action="/newcase2">
         {{ form.hidden_tag() }}
-        <div class="form-group">
+        <div class="form-group" id='input1'>
             {{ form.program_select.label(class="form-control-label") }} {{ form.program_select }}
         </div>
-        <div class="form-group">
+        <div class="form-group" id='input2'>
             {{ form.project_select.label(class="form-control-label") }} {{ form.project_select }}
         </div>
-        <div class="form-group">
+        <div class="form-group" id='button_submit'>
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
 </div>
 
+<script>
+
+    $(document).ready(function () {
+
+        $('#contents_section').click(function () {
+            var project_select_data = $('#input1');
+            alert(project_select_data.val());
+        });
+
+    });
+
+</script>
 {% endblock content %}

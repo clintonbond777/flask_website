@@ -76,7 +76,7 @@ class CreateProgramForm(FlaskForm):
 
     def validate_program_name(self, program):
         program_validate = Program.query.filter_by(
-            program=name.data
+            program=program.name.data
         ).first()  # check if it already exists in db
         if program_validate:
             raise ValidationError("Program taken already. Please use a unique program")
