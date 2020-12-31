@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from sqlalchemy.sql.schema import ForeignKey
 from flask_website import db, login_manager
 from flask_login import UserMixin
@@ -67,14 +66,13 @@ class Case(db.Model):
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
     model_id = db.Column(db.Integer, db.ForeignKey("model.id"), nullable=False)
-    baseline_id = db.Column(db.Integer, ForeignKey('model.id'))
+    baseline_id = db.Column(db.Integer, ForeignKey("model.id"))
     ridemap_id = db.Column(db.Integer, db.ForeignKey("ridemap.id"), nullable=False)
-    
+
     project = db.relationship("Project", back_populates="case")
 
-    
     def __repr__(self):
-        return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{model_id}'"
+        return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{self.model_id}'"
 
 
 class Model(db.Model):
@@ -83,8 +81,9 @@ class Model(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     description = db.Column(db.Text, unique=False, nullable=False)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)   
+    created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     program_id = db.Column(db.Integer, db.ForeignKey("program.id"), nullable=False)
+
     def __repr__(self):
         return f"Model|'{self.name}'),'{self.description}','{self.created_date}'"
 
@@ -125,8 +124,8 @@ class RideHeight(db.Model):
 class RideMap(db.Model):
     __tablename__ = "ridemap"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Float(), nullable=False)
-    description = db.Column(db.Float(), nullable=False)
+    name = db.Column(db.String(20), unique=True, nullable=False)
+    description = db.Column(db.Text, unique=False, nullable=False)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     program_id = db.Column(db.Integer, db.ForeignKey("program.id"), nullable=False)
     # rideheight1 = db.relationship('RideHeight', secondary= 'RideMap_Rideheight', lazy = 'subquery', backref = db.backref('ridemap', lazy=True))
@@ -140,3 +139,21 @@ RideMap_Rideheight = db.Table(
     ),
     db.Column("ridemap_id", db.Integer, db.ForeignKey("ridemap.id"), primary_key=True),
 )
+
+
+class GeomConfig(db.Model):
+    __tablename__ = "geom_config"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=True, nullable=False)
+    description = db.Column(db.Text, unique=False, nullable=False)
+    created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    program_id = db.Column(db.Integer, db.ForeignKey("program.id"), nullable=False)
+
+
+class RuntimeConfig(db.Model):
+    __tablename__ = "runtime_config"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=True, nullable=False)
+    description = db.Column(db.Text, unique=False, nullable=False)
+    created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    program_id = db.Column(db.Integer, db.ForeignKey("program.id"), nullable=False)

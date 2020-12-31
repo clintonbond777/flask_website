@@ -123,27 +123,4 @@ class CreateCaseForm(FlaskForm):
     description = StringField("Description", validators=[DataRequired()])
 
     # submit all that information to server with nice button
-    submit = SubmitField("Create Project")
-
-
-class CreateCaseForm2(FlaskForm):
-    def get_current_program():
-        return [(str(u.id), u.name) for u in Program.query.all()]
-
-    # select program to be associated with
-    program_select = SelectField("Program", choices=get_current_program())
-    project_select = SelectField("Project", choices=[], coerce=int)
-
-    # project_select = NonValidatingSelectField(u"project", choices=[])
-    # trying to get dynamic dropdown to work
-
-    # project_select = SelectField(choices=get_selected_project_from_program())
-
-    # create name of project
-
-    # put a description of the project
-    name = StringField("Case Name", validators=[DataRequired(), Length(min=2, max=20)])
-    description = StringField("Description", validators=[DataRequired()])
-
-    # submit all that information to server with nice button
     submit = SubmitField("Create Case")

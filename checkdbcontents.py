@@ -83,6 +83,7 @@ for mod in list_models:
     db.session.add(mod)
 db.session.commit()
 
+### Ridemap
 r1 = RideMap(name="AA", description="A bumpy ride on gravel", program_id=p1.id)
 r2 = RideMap(name="BB", description="shorter track", program_id=p1.id)
 r3 = RideMap(name="CC", description="rrh sweep", program_id=p1.id)
@@ -95,13 +96,15 @@ r7 = RideMap(name="GG", description="Short-track-550", program_id=p3.id)
 r8 = RideMap(name="HH", description="Short-track-650", program_id=p3.id)
 r9 = RideMap(name="II", description="Short-track-750", program_id=p3.id)
 
+
+
 c1 = Case(
     name="baseline run",
     description="2022 baseline preliminary run",
     created_by=u1.id,
     project_id=p1.id,
-    model_id=m2.id,
-    baseline_id=m2.id,
+    model_id=m1.id,
+    baseline_id=m1.id,
     ridemap_id=r1.id,
 )
 
@@ -109,10 +112,80 @@ c2 = Case(
     name="Test part swap",
     description="2022 part swap",
     created_by=u1.id,
-    project_id=p3.id,
+    project_id=p1.id,
     model_id=m2.id,
+    baseline_id=m1.id,
+    ridemap_id=r2.id,
+)
+
+c3 = Case(
+    name="baseline run",
+    description="2022 baseline preliminary run",
+    created_by=u1.id,
+    project_id=p1.id,
+    model_id=m3.id,
+    baseline_id=m1.id,
+    ridemap_id=r1.id,
+)
+
+c4 = Case(
+    name="Test part swap",
+    description="2022 part swap",
+    created_by=u1.id,
+    project_id=p3.id,
+    model_id=m4.id,
     baseline_id=m2.id,
     ridemap_id=r2.id,
+)
+
+c5 = Case(
+    name="baseline run",
+    description="2022 baseline preliminary run",
+    created_by=u1.id,
+    project_id=p1.id,
+    model_id=m3.id,
+    baseline_id=m1.id,
+    ridemap_id=r1.id,
+)
+
+c6 = Case(
+    name="Test part swap",
+    description="2022 part swap",
+    created_by=u1.id,
+    project_id=p3.id,
+    model_id=m4.id,
+    baseline_id=m2.id,
+    ridemap_id=r2.id,
+)
+
+c7 = Case(
+    name="Test part swap",
+    description="2022 part swap",
+    created_by=u1.id,
+    project_id=p3.id,
+    model_id=m7.id,
+    baseline_id=m2.id,
+    ridemap_id=r7.id,
+)
+
+c8 = Case(
+    name="baseline run",
+    description="2022 baseline preliminary run",
+    created_by=u1.id,
+    project_id=p1.id,
+    model_id=m8.id,
+    baseline_id=m7.id,
+    ridemap_id=r8.id,
+)
+
+c9 = Case(
+    name="Test part swap",
+    description="2022 part swap",
+    created_by=u1.id,
+    project_id=p3.id,
+    model_id=m8.id,
+    baseline_id=m2.id,
+    ridemap_id=r9.id,
 )
 
 list_models = [c1, c2]
@@ -146,7 +219,7 @@ for c in Case.query.all():
 user = User.query.filter_by(id="2").first()
 print(p1.created_by)
 
-print("Add in two projects")
+print("Add in a few projects")
 pp1 = Project(
     name="Cooling",
     description="Brake Cooling",

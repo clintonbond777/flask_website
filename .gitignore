@@ -139,3 +139,7 @@ cython_debug/
 
 # images 
 *.png
+
+# remove sqlite db file from github
+
+*.db

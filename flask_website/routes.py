@@ -10,8 +10,7 @@ from flask_website import app, bcrypt, db
 from flask_website.forms import (
     CreateProgramForm,
     CreateProjectForm,
-    # CreateCaseForm,
-    CreateCaseForm2,
+    CreateCaseForm,
     LoginForm,
     RegistrationForm,
     UpdateAccountForm,
@@ -197,33 +196,6 @@ def project(program_id, project_id):
     )
 
 
-# @app.route("/newcase", methods=["GET", "POST"])
-# @login_required
-# def newcase():
-#     program = Program.query.all()
-#     form = CreateCaseForm()
-#     form.program_select.choices = [(g.id, g.name) for g in Program.query.all()]
-#     form.project_select.choices = [(g.id, g.name) for g in Project.query.all()]
-#     if request.method == "GET":
-#         return render_template("create_case.html", form=form)
-#     if form.validate_on_submit() and request.form["form_name"] == "PickProject":
-#         # code to process form
-#         flash(
-#             "Program: %s, Project: %s"
-#             % (form.program_select.data, form.project_select.data)
-#         )
-#     return redirect(url_for("newcase"))
-
-
-# @app.route("/_get_projects/u")
-# def _get_projects():
-#     program = request.args.get("program_selected", "01", type=str)
-#     projects = [
-#         (row.ID, row.Name) for row in Project.query.filter_by(program=program).all()
-#     ]
-#     return jsonify(projects)
-
-
 @login_required
 @app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
 def case(program_id, project_id, case_id):
@@ -235,15 +207,15 @@ def case(program_id, project_id, case_id):
     )
 
 
-@app.route("/newcase2", methods=["GET", "POST"])
+@app.route("/newcase", methods=["GET", "POST"])
 @login_required
-def newcase2():
+def newcase():
     program = Program.query.all()
-    form = CreateCaseForm2()
+    form = CreateCaseForm()
     form.program_select.choices = [(g.id, g.name) for g in Program.query.all()]
     form.project_select.choices = [(g.id, g.name) for g in Project.query.all()]
     if request.method == "GET":
-        return render_template("create_case3.html", form=form)
+        return render_template("create_case.html", form=form)
 
     if form.validate_on_submit():  # and request.form["form_name"] == "PickProject":
         # code to process form
@@ -251,7 +223,7 @@ def newcase2():
             "Program: %s, Project: %s"
             % (form.program_select.data, form.project_select.data)
         )
-    return redirect(url_for("newcase2"))
+    return redirect(url_for("newcase"))
 
 
 @app.route("/_get_project/")
