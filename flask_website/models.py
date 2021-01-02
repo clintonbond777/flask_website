@@ -17,7 +17,8 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
     ### Links to Progam db model
-    create_program = db.relationship("Program", backref="creator", lazy=True)
+    creator_program = db.relationship("Program", backref="creator_program", lazy=True)
+    creator_project = db.relationship("Project", backref="creator_project", lazy=True)
 
     def __repr__(self):
         return f"User|'{self.id}','{self.username}','{self.email}','{self.image_file}','{self.password}','{self.create_program}'"
@@ -70,6 +71,9 @@ class Case(db.Model):
     ridemap_id = db.Column(db.Integer, db.ForeignKey("ridemap.id"), nullable=False)
 
     project = db.relationship("Project", back_populates="case")
+
+    geometry_id = db.Column(db.Integer, ForeignKey("geomconfig.id"))
+    
 
     def __repr__(self):
         return f"Case|('{self.id}','{self.name}'),'{self.description}','{self.project_id}','{self.model_id}'"
@@ -142,7 +146,7 @@ RideMap_Rideheight = db.Table(
 
 
 class GeomConfig(db.Model):
-    __tablename__ = "geom_config"
+    __tablename__ = "geomconfig"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     description = db.Column(db.Text, unique=False, nullable=False)

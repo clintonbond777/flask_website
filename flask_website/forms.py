@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.widgets.core import Select
 from flask_website.models import User, Program, Project, Case
 from flask_login import current_user
 
@@ -110,17 +111,14 @@ class CreateCaseForm(FlaskForm):
     # select program to be associated with
     program_select = SelectField("Program", choices=get_current_program())
     project_select = SelectField("Project", choices=[], coerce=int)
-
-    # project_select = NonValidatingSelectField(u"project", choices=[])
-    # trying to get dynamic dropdown to work
-
-    # project_select = SelectField(choices=get_selected_project_from_program())
-
-    # create name of project
+    geometry_upload = FileField(
+        "Add an ANSA file", validators=[FileAllowed(["jpg", "png", "ANSA.gz"])]
+    )
+    geometry_select = SelectField("Select Existing Geometry", choices=[], coerce=int)
 
     # put a description of the project
     name = StringField("Case Name", validators=[DataRequired(), Length(min=2, max=20)])
     description = StringField("Description", validators=[DataRequired()])
-
+    baseline_case = SelectField("Project", choices=[], coerce=int)
     # submit all that information to server with nice button
     submit = SubmitField("Create Case")

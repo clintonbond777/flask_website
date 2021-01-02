@@ -1,20 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
-        <article class="media content-section">
-          <img class = "rounded-circle article-img", src="{{ url_for('static',filename = 'profile_pics/' + program.creator.image_file) }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ projects.created_by}}</a>
-              <small class="text-muted"> Created {{ project.created_date.strftime('%Y-%m-%d') }}</small>
-            </div>
-            <h2 class="article-title">{{ project.name }}</h2>
-            <p class="article-content">{{ project.description }}</p>
-            {% for rp in ridepoints %}
-              <div class="media-body">
-                <h2><a class="article-title" href="{{ url_for('case', program_id = program.id, project_id = project.id, case_id = case.id) }}">{{ project.name }}</a></h2>
-                <div class="article-text">{{ rp.description }} </div>
-              </div>
-            {% endfor %}
-          </div>
-        </article>
+<article class="media content-section">
+  <img class="rounded-circle article-img" ,
+    src="{{ url_for('static',filename = 'profile_pics/' + program.creator_program.image_file) }}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ projects.created_by}}</a>
+      <small class="text-muted"> Created {{ project.created_date.strftime('%Y-%m-%d') }}</small>
+    </div>
+    <h2 class="article-title">{{ project.name }}</h2>
+    <p class="article-content">{{ project.description }}</p>
+    {% for rp in ridepoints %}
+    <div class="media-body">
+      <h2><a class="article-title"
+          href="{{ url_for('case', program_id = program.id, project_id = project.id, case_id = case.id) }}">{{
+          project.name }}</a></h2>
+      <div class="article-text">{{ rp.description }} </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</article>
 {% endblock content %}

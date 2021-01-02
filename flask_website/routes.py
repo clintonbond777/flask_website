@@ -21,15 +21,16 @@ from flask_website.models import Case, Program, Project, User
 @app.route("/")
 @app.route("/home")
 def home():
+    print(Program.query.all())
     return render_template("home.html", programs=Program.query.all())
 
 
-@app.route("/about")
+@app.route("/about/")
 def about():
     return render_template("home.html")
 
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register/", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
@@ -52,7 +53,7 @@ def register():
     return render_template("register.html", title="Register", form=form)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login/", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
@@ -68,7 +69,7 @@ def login():
     return render_template("login.html", title="login", form=form)
 
 
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     logout_user()
     return redirect(url_for("login"))
@@ -86,7 +87,7 @@ def save_picture(form_picture):
     return picture_fn
 
 
-@app.route("/account", methods=["GET", "POST"])
+@app.route("/account/", methods=["GET", "POST"])
 @login_required
 def account():
     form = UpdateAccountForm()
@@ -108,7 +109,7 @@ def account():
     )
 
 
-@app.route("/newprogram", methods=["GET", "POST"])
+@app.route("/newprogram/", methods=["GET", "POST"])
 @login_required
 def newprogram():
     form = CreateProgramForm()
@@ -126,9 +127,9 @@ def newprogram():
     return render_template("create_program.html", title="Create a Program", form=form)
 
 
-@app.route("/programs/<int:program_id>")
+@app.route("/program/<int:program_id>/")
 @login_required
-def programs(program_id):
+def program(program_id):
     program = Program.query.get_or_404(program_id)
     projects = program.project
     return render_template(
@@ -136,12 +137,10 @@ def programs(program_id):
     )
 
 
-@app.route("/programs/<int:program_id>/update")
 @login_required
+@app.route("/program/<int:program_id>/update/", methods=["GET", "POST"])
 def update_program(program_id):
     program = Program.query.get_or_404(program_id)
-    if program.creator != current_user:
-        abort(403)
 
     form = CreateProgramForm()
 
@@ -150,20 +149,20 @@ def update_program(program_id):
         program.description = form.description.data
         db.session.commit()
         flash("Your Program has been updated")
+        return redirect(url_for("program", program_id=program_id))
+
     elif request.method == "GET":
         form.name.data = program.name
         form.description.data = program.description
-        return redirect(url_for("programs", program_id=program.id))
-
-    return render_template(
-        "create_program.html",
-        title="Create a Program",
-        form=form,
-        legend="Update Program",
-    )
+        return render_template(
+            "create_program.html",
+            title="Edit a Program",
+            form=form,
+            legend="Update Program",
+        )
 
 
-@app.route("/newproject", methods=["GET", "POST"])
+@app.route("/newproject/", methods=["GET", "POST"])
 @login_required
 def newproject():
     form = CreateProjectForm()
@@ -182,10 +181,12 @@ def newproject():
 
 
 @login_required
-@app.route("/programs/<int:program_id>/<int:project_id>/")
-def project(program_id, project_id):
-    program = Program.query.get_or_404(program_id)
+@app.route("/project/<int:project_id>/")
+def project(project_id):
+
     project = Project.query.get_or_404(project_id)
+    program = Program.query.get_or_404(project.program_id)
+
     cases = project.case
     return render_template(
         "project.html",
@@ -197,7 +198,37 @@ def project(program_id, project_id):
 
 
 @login_required
-@app.route("/programs/<int:program_id>/<int:project_id>/<int:case_id>")
+@app.route("/project/<int:project_id>/update/", methods=["GET", "POST"])
+def update_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    # program_id_inter = project.program_id
+    # if project.creator != current_user:
+    # abort(403)
+
+    form = CreateProjectForm()
+
+    if form.validate_on_submit():
+        project.name = form.name.data
+        project.description = form.description.data
+        db.session.commit()
+        flash("Your Project has been updated")
+        return redirect(url_for("project", project_id=project.id))
+
+    elif request.method == "GET":
+        form.name.data = project.name
+        form.description.data = project.description
+        return render_template("create_project.html", title="Edit a Project", form=form)
+
+    return render_template(
+        "create_program.html",
+        title="Create a Program",
+        form=form,
+        legend="Update Program",
+    )
+
+
+@login_required
+@app.route("/<int:program_id>/<int:project_id>/<int:case_id>/")
 def case(program_id, project_id, case_id):
     program = Program.query.get_or_404(program_id)
     projects = Project.query.get_or_404(project_id)
@@ -207,7 +238,7 @@ def case(program_id, project_id, case_id):
     )
 
 
-@app.route("/newcase", methods=["GET", "POST"])
+@app.route("/newcase/", methods=["GET", "POST"])
 @login_required
 def newcase():
     program = Program.query.all()
@@ -228,23 +259,12 @@ def newcase():
 
 @app.route("/_get_project/")
 def _get_project():
-    # good for debug, make sure args were sent
     print(request.args)
     program_ID = request.args.get("program_select_var", "default_if_none")
     print(program_ID)
 
     output = {}
-    # output["project"] = [
-    #     ("1", "this is one"),
-    #     ("2", "this is two"),
-    #     ("3", "this is :)"),
-    # ]
-
     output["project"] = [
         (x.id, x.name) for x in Project.query.filter_by(program_id=program_ID)
     ]
-    print(output, "\n")
-    #
-
-    print(jsonify(output))
     return jsonify(output)
