@@ -1,21 +1,23 @@
 import os
 import re
 import secrets
+from types import ClassMethodDescriptorType
 
-from flask import flash, redirect, render_template, request, url_for, jsonify, abort
+from flask import flash, redirect, render_template, request, url_for, jsonify, abort, session
 from flask_login import current_user, login_required, login_user, logout_user
 from PIL import Image
 
 from flask_website import app, bcrypt, db
 from flask_website.forms import (
+    LoginForm,
     CreateProgramForm,
     CreateProjectForm,
     CreateCaseForm,
-    LoginForm,
+    CreateModelForm,
     RegistrationForm,
-    UpdateAccountForm,
+    UpdateAccountForm
 )
-from flask_website.models import Case, Program, Project, User
+from flask_website.models import Case, Program, Project, User, Model
 
 
 @app.route("/")
@@ -172,7 +174,7 @@ def newproject():
             name=form.name.data,
             description=form.description.data,
             created_by=current_user.id,
-            program_id=form.program_select.data,
+            program_id=form.program_select.data
         )
         db.session.add(project)
         db.session.commit()
@@ -253,12 +255,47 @@ def newcase():
         flash(
             "Program: %s, Project: %s"
             % (form.program_select.data, form.project_select.data)
+            
+            #session['new_case'] =  dict([(desc, field) for desc, field in form.data.items()])
         )
-    return redirect(url_for("newcase"))
+        return redirect(url_for('newmodel'))
 
 
-@app.route("/_get_project/")
-def _get_project():
+@app.route("/newmodel/", methods=["GET", "POST"])
+@login_required
+def newmodel():
+    program = Program.query.all()
+    form = CreateModelForm()
+    if request.method == "GET":
+        return render_template("create_model.html", form=form)
+
+    if form.validate_on_submit():  # and request.form["form_name"] == "PickProject":
+        
+        model = Model(
+            name=form.name.data,
+            description=form.description.data,
+            created_by=current_user.id,
+            program_id=form.program_select.data
+        )
+        db.session.add(model)
+        db.session.flush()
+        db.session.commit()
+
+        case = Case(name = session['newcase']['name'],
+        description = session['newcase']['description'], 
+        created_by = current_user.id,
+        project_id = session['newcase']['project_select'],
+        model_id = model.id,
+        baseline_id = 1,
+        ridemap_id = 1
+        )
+        db.session.add(model)
+        db.session.commit()
+        return redirect(url_for("home"))
+
+
+@app.route("/_get_program_info/")
+def _get_program_info():
     print(request.args)
     program_ID = request.args.get("program_select_var", "default_if_none")
     print(program_ID)
@@ -267,4 +304,5 @@ def _get_project():
     output["project"] = [
         (x.id, x.name) for x in Project.query.filter_by(program_id=program_ID)
     ]
+    output["geometry"] = [(x.id, x.name) for x in Model.query.filter_by(program_id=program_ID)]
     return jsonify(output)

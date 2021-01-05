@@ -111,9 +111,7 @@ class CreateCaseForm(FlaskForm):
     # select program to be associated with
     program_select = SelectField("Program", choices=get_current_program())
     project_select = SelectField("Project", choices=[], coerce=int)
-    geometry_upload = FileField(
-        "Add an ANSA file", validators=[FileAllowed(["jpg", "png", "ANSA.gz"])]
-    )
+    
     geometry_select = SelectField("Select Existing Geometry", choices=[], coerce=int)
 
     # put a description of the project
@@ -122,3 +120,17 @@ class CreateCaseForm(FlaskForm):
     baseline_case = SelectField("Project", choices=[], coerce=int)
     # submit all that information to server with nice button
     submit = SubmitField("Create Case")
+
+class CreateModelForm(FlaskForm):
+    # create name of project
+    name = StringField("Model Name", validators=[DataRequired(), Length(min=2, max=20)])
+    # put a description of the project
+
+    description = StringField("Model Description", validators=[DataRequired()])
+
+    geometry_upload = FileField(
+        "Add an ANSA file", validators=[FileAllowed(["jpg", "png", "ANSA.gz"])]
+    )
+
+    # submit all that information to server with nice button
+    submit = SubmitField("Create Model and Submit Case")

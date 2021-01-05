@@ -11,9 +11,11 @@
         
         var dropdown = {
             select_program: $('#program_select'),
-            select_project: $('#project_select')
+            select_project: $('#project_select'),
+            select_geometry: $('#geometry_select')
         };
         updateProject();
+        updateGeometry();
         console.log(dropdown)
 
         function updateProject() {
@@ -25,7 +27,7 @@
             console.log(send)
                 dropdown.select_project.attr('disabled', 'disabled');
                 dropdown.select_project.empty();
-            $.getJSON("{{ url_for('_get_project') }}", send, function(data) {
+            $.getJSON("{{ url_for('_get_program_info') }}", send, function(data) {
                 
                 $.each(data["project"], function(index, element){
                     console.log(element)
@@ -41,8 +43,35 @@
                 dropdown.select_project.removeAttr('disabled');
             });
         }
+
+        function updateGeometry() {
+            console.log("inside the updateGeometry() function")
+            var send = {
+                program_select_var: dropdown.select_program.val()
+                };
+
+            console.log(send)
+                dropdown.select_geometry.attr('disabled', 'disabled');
+                dropdown.select_geometry.empty();
+            $.getJSON("{{ url_for('_get_program_info') }}", send, function(data) {
+                
+                $.each(data["geometry"], function(index, element){
+                    console.log(element)
+                                            
+                    dropdown.select_geometry.append(
+                        
+                    $('<option>', {
+                        value: element[0],
+                        text: element[1]
+                        })
+                    );
+                });    
+                dropdown.select_geometry.removeAttr('disabled');
+            });
+        }
         dropdown.select_program.on('change', function() {
             updateProject();
+            updateGeometry();
         });
     });
 </script>
@@ -65,24 +94,12 @@
             <div class="form-group">
                 {{ form.description.label(class="form-control-label") }} {{ form.description }}
             </div>
-            <p> Upload geometry </p>
-            <div class="form-group">
-                {{ form.geometry_upload.label() }}
-                {{ form.geometry_upload(class="form-control-file") }}
-                {% if form.geometry_upload.errors %}
-                {% for error in form.geometry_upload.errors %}
-                <span class="text-danger">{{ error }}</span>
-                {% endfor %}
-                {% endif %}
-            </div>
-            <p>or select an existing geometry</p>
+            <h2> Upload geometry </h2>
+
+            <h3> select an existing geometry</h3>
 
             <div class="form-group">
                 {{ form.geometry_select.label(class="form-control-label") }} {{ form.geometry_select }}
-            </div>
-
-            <div class="form-group">
-                {{ form.description.label(class="form-control-label") }} {{ form.description }}
             </div>
 
             <div class="form-group">

@@ -96,7 +96,11 @@ r7 = RideMap(name="GG", description="Short-track-550", program_id=p3.id)
 r8 = RideMap(name="HH", description="Short-track-650", program_id=p3.id)
 r9 = RideMap(name="II", description="Short-track-750", program_id=p3.id)
 
+list_rm = [r1, r2, r3, r4, r5, r6, r7, r8, r9]
 
+for mod in list_rm:
+    db.session.add(mod)
+db.session.commit()
 
 c1 = Case(
     name="baseline run",
@@ -135,7 +139,7 @@ c4 = Case(
     project_id=p3.id,
     model_id=m4.id,
     baseline_id=m2.id,
-    ridemap_id=r2.id,
+    ridemap_id=r4.id,
 )
 
 c5 = Case(
@@ -145,7 +149,7 @@ c5 = Case(
     project_id=p1.id,
     model_id=m3.id,
     baseline_id=m1.id,
-    ridemap_id=r1.id,
+    ridemap_id=r5.id,
 )
 
 c6 = Case(
@@ -155,7 +159,7 @@ c6 = Case(
     project_id=p3.id,
     model_id=m4.id,
     baseline_id=m2.id,
-    ridemap_id=r2.id,
+    ridemap_id=r5.id,
 )
 
 c7 = Case(
@@ -188,7 +192,7 @@ c9 = Case(
     ridemap_id=r9.id,
 )
 
-list_models = [c1, c2]
+list_models = [c1, c2, c3, c4, c5, c6, c7, c8, c9]
 
 for mod in list_models:
     db.session.add(mod)
