@@ -1,11 +1,18 @@
 import os
 import re
 import secrets
-from types import ClassMethodDescriptorType
+
+
 
 from flask import flash, redirect, render_template, request, url_for, jsonify, abort, session
 from flask_login import current_user, login_required, login_user, logout_user
 from PIL import Image
+
+import plotly
+import plotly.graph_objs as go 
+import numpy as np
+import json
+import pandas as pd
 
 from flask_website import app, bcrypt, db
 from flask_website.forms import (
@@ -18,6 +25,28 @@ from flask_website.forms import (
     UpdateAccountForm
 )
 from flask_website.models import Case, Program, Project, User, Model
+
+
+@app.route("/plot")
+def plot():
+    bar = create_plot('blargh')
+    print(Program.query.all())
+    return render_template("plot.html", plot = bar)
+
+def create_plot(feature):
+    N = 40
+    x = np.linspace(0, 1, N)
+    y = np.random.randn(N)
+    df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
+    data = [
+        go.Bar(
+            x=df['x'], # assign x as the dataframe column 'x'
+            y=df['y']
+        )
+    ]
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
+
 
 
 @app.route("/")
@@ -215,7 +244,7 @@ def update_project(project_id):
         db.session.commit()
         flash("Your Project has been updated")
         return redirect(url_for("project", project_id=project.id))
-
+        
     elif request.method == "GET":
         form.name.data = project.name
         form.description.data = project.description
@@ -233,10 +262,10 @@ def update_project(project_id):
 @app.route("/<int:program_id>/<int:project_id>/<int:case_id>/")
 def case(program_id, project_id, case_id):
     program = Program.query.get_or_404(program_id)
-    projects = Project.query.get_or_404(project_id)
-    case = Case.query.get_or_404(case_id)
+    project = Project.query.get_or_404(project_id)
+    cases = project.case
     return render_template(
-        "case.html", title=program.name, program=program, projects=projects, case=case
+        "case.html", title=program.name, program=program, project=project, case=cases
     )
 
 
@@ -255,7 +284,6 @@ def newcase():
         flash(
             "Program: %s, Project: %s"
             % (form.program_select.data, form.project_select.data)
-            
             #session['new_case'] =  dict([(desc, field) for desc, field in form.data.items()])
         )
         return redirect(url_for('newmodel'))

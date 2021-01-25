@@ -49,11 +49,8 @@ class Project(db.Model):
     )  # auto
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     program_id = db.Column(db.Integer, db.ForeignKey("program.id"), nullable=False)
-
     program = db.relationship("Program", back_populates="project")
-
     case = db.relationship("Case", back_populates="project")  # forward
-
     def __repr__(self):
         return f"Program|'{self.name}'),'{self.description}','{self.created_date}','{self.created_by}', '{self.program_id}','{self.program}'"
 

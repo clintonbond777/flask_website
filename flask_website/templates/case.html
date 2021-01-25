@@ -5,7 +5,7 @@
     src="{{ url_for('static',filename = 'profile_pics/' + program.creator_program.image_file) }}">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="#">{{ projects.created_by}}</a>
+      <a class="mr-2" href="#">{{ project.created_by}}</a>
       <small class="text-muted"> Created {{ project.created_date.strftime('%Y-%m-%d') }}</small>
     </div>
     <h2 class="article-title">{{ project.name }}</h2>
